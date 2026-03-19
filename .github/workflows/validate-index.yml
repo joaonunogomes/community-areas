@@ -195,11 +195,11 @@ jobs:
           echo ""
           echo "All version bumps validated successfully."
 
-      - name: Validate image file sizes (max 100KB)
+      - name: Validate image file sizes (max 300KB)
         id: validate-image-size
         if: always()
         run: |
-          max_bytes=102400
+          max_bytes=307200
           errors=0
           error_messages=""
 
@@ -207,7 +207,7 @@ jobs:
             size=$(stat --format="%s" "$img")
             if [ "$size" -gt "$max_bytes" ]; then
               size_kb=$(( (size + 1023) / 1024 ))
-              msg="Image '$img' is ${size_kb}KB, exceeds 100KB limit"
+              msg="Image '$img' is ${size_kb}KB, exceeds 300KB limit"
               echo "::error::$msg"
               error_messages="$error_messages- $msg\n"
               errors=$((errors + 1))
@@ -219,11 +219,11 @@ jobs:
 
           if [ "$errors" -gt 0 ]; then
             echo ""
-            echo "Found $errors image(s) exceeding the 100KB size limit."
+            echo "Found $errors image(s) exceeding the 300KB size limit."
             exit 1
           fi
 
-          echo "All images are within the 100KB size limit."
+          echo "All images are within the 300KB size limit."
 
       - name: Validate images are JPG format
         id: validate-image-format
@@ -276,7 +276,7 @@ jobs:
               sections.push('### Version Bump\nAreas with changes need their `version` field bumped by 1 in `index.json`.');
             }
             if ('${{ steps.validate-image-size.outcome }}' === 'failure') {
-              sections.push('### Image Size\nSome images exceed the 100KB size limit.');
+              sections.push('### Image Size\nSome images exceed the 300KB size limit.');
             }
             if ('${{ steps.validate-image-format.outcome }}' === 'failure') {
               sections.push('### Image Format\nOnly `.jpg`/`.jpeg` images are allowed in `images/` directories.');

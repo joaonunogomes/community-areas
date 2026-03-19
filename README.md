@@ -52,6 +52,18 @@ Each boulder object:
 | `sector`        | string | no       | Sub-area within the location   |
 | `imageFilename` | string | no       | Route-specific image filename  |
 
+## Area Editor (`index.html`)
+
+The repository includes a browser-based editor for creating and editing area `data.json` files. Open `index.html` in a browser to:
+
+- Fill in area metadata (name, type, coordinates, country, city, description).
+- Add boulder problems with name, grade, notes, and optional sector.
+- Upload and compress images (automatically resized to meet the 300KB limit).
+- Draw route lines on boulder images.
+- Export the resulting `data.json` ready for submission.
+
+The editor uses an `escapeHtml()` utility to safely render JSON previews, preventing any HTML injection when displaying user-provided content.
+
 ## Contributing
 
 ### Adding a new area
@@ -76,5 +88,5 @@ Every PR is validated by CI — your changes to area directories **must** be ref
 - The `boulderCount` in `index.json` doesn't match the actual number of boulders in `data.json`.
 - The `slug`, `name`, `country`, `city`, or `type` fields are out of sync.
 - The `version` field is missing, not a positive integer, or was not bumped by 1 for changed areas.
-- Any image file exceeds the **100KB** size limit.
+- Any image file exceeds the **300KB** size limit.
 - Any image is not in **JPG** format (only `.jpg`/`.jpeg` files are allowed).

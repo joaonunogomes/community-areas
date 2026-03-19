@@ -20,4 +20,4 @@
 - [ ] `index.json` entry matches `data.json` (`name`, `country`, `city`, `type`, `boulderCount`)
 - [ ] `version` in `index.json` is set to `1` (new area) or bumped by 1 (update)
 - [ ] All images are in `.jpg`/`.jpeg` format
-- [ ] All images are under 100KB
+- [ ] All images are under 300KB
