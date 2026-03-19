@@ -52,9 +52,9 @@ Each boulder object:
 | `sector`        | string | no       | Sub-area within the location   |
 | `imageFilename` | string | no       | Route-specific image filename  |
 
-## Area Editor (`index.html`)
+## Area Editor
 
-The repository includes a browser-based editor for creating and editing area `data.json` files. Open `index.html` in a browser to:
+The repository includes a browser-based editor for creating and editing area `data.json` files, available at **https://ninewayclimbing.github.io/community-areas/**. Use it to:
 
 - Fill in area metadata (name, type, coordinates, country, city, description).
 - Add boulder problems with name, grade, notes, and optional sector.
