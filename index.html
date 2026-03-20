@@ -488,7 +488,7 @@ function filterAreas() {
 
   grid.innerHTML = filtered.map(a => {
     const imgPath = `areas/${a.slug}/images/`;
-    const coverImg = a.imageFilename ? `<img class="area-card-img" src="${imgPath}${a.imageFilename}" alt="${escapeHtml(a.name || a.slug)}">` : `<div class="area-card-img-placeholder">&#9968;</div>`;
+    const coverImg = a.imageFilename ? `<img class="area-card-img" src="${imgPath}${a.imageFilename}" alt="${escapeHtml(a.name || a.slug)}" onerror="imgFallback(this)">` : `<div class="area-card-img-placeholder">&#9968;</div>`;
     return `<div class="area-card" onclick="openArea('${a.slug}')">
       ${coverImg}
       <div class="area-card-body">
@@ -1105,6 +1105,10 @@ function loadScript(src) {
     s.onerror = reject;
     document.head.appendChild(s);
   });
+}
+
+function imgFallback(el) {
+  el.outerHTML = '<div class="area-card-img-placeholder">&#9968;</div>';
 }
 
 function escapeHtml(str) {
