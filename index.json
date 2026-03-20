@@ -6,6 +6,7 @@
       "city": "Santo Tirso",                                                            
       "type": "Bouldering",
       "boulderCount": 121,
+      "imageFilename": "assuncao-croqui.jpg",
       "version": 2
     },                                                                                  
     {                                                                                   
@@ -15,6 +16,7 @@
       "city": "Santo Tirso",
       "type": "Bouldering",
       "boulderCount": 6,
+      "imageFilename": "raposa.jpg",
       "version": 2
     },
     {                                                                                   
@@ -24,6 +26,7 @@
       "city": "Braga",
       "type": "Bouldering",
       "boulderCount": 71,
+      "imageFilename": "sameiro.jpg",
       "version": 3
     }
   ]
