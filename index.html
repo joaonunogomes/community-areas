@@ -386,6 +386,7 @@ let currentSlug = null;
 let boulders = [];
 let selectedIdx = -1;
 let coverImageData = null;
+let existingCoverFilename = null;
 
 // --- Init ---
 (function init() {
@@ -526,6 +527,7 @@ function resetEditor() {
   boulders = [];
   selectedIdx = -1;
   coverImageData = null;
+  existingCoverFilename = null;
   document.getElementById('areaName').value = '';
   document.getElementById('areaCountry').value = '';
   document.getElementById('areaCity').value = '';
@@ -556,6 +558,13 @@ async function openArea(slug) {
     document.getElementById('areaDesc').value = data.description || '';
     document.getElementById('areaLat').value = data.coordinates?.latitude ?? '';
     document.getElementById('areaLng').value = data.coordinates?.longitude ?? '';
+
+    if (data.imageFilename) {
+      existingCoverFilename = data.imageFilename;
+      const coverUrl = `areas/${slug}/images/${data.imageFilename}`;
+      document.getElementById('coverInfo').innerHTML =
+        `<img src="${coverUrl}" style="max-height:48px;border-radius:4px;vertical-align:middle;" onerror="this.replaceWith(document.createTextNode('Image not found'))"> <span style="color:var(--text-dim)">${escapeHtml(data.imageFilename)}</span>`;
+    }
 
     if (data.boulders && Array.isArray(data.boulders)) {
       boulders = data.boulders.map(b => ({
@@ -966,11 +975,13 @@ function buildDataJSON() {
 
   if (coverImageData) {
     area.imageFilename = 'cover.jpg';
+  } else if (existingCoverFilename) {
+    area.imageFilename = existingCoverFilename;
   }
 
   area.boulders = boulders.map((b, i) => {
     const slug = (b.name || `boulder_${i + 1}`).replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-    const filename = b.imageData ? `${slug}.jpg` : null;
+    const filename = b.imageData ? `${slug}.jpg` : b.imageFilename;
     b.imageFilename = filename;
 
     const boulder = { name: b.name || `Boulder ${i + 1}`, grade: b.grade, stars: b.stars };
@@ -1062,6 +1073,12 @@ async function handleImportJSON(input) {
     document.getElementById('areaDesc').value = data.description || '';
     document.getElementById('areaLat').value = data.coordinates?.latitude ?? '';
     document.getElementById('areaLng').value = data.coordinates?.longitude ?? '';
+
+    if (data.imageFilename) {
+      existingCoverFilename = data.imageFilename;
+      document.getElementById('coverInfo').innerHTML =
+        `<span style="color:var(--text-dim)">${escapeHtml(data.imageFilename)}</span>`;
+    }
 
     if (data.boulders && Array.isArray(data.boulders)) {
       boulders = data.boulders.map(b => ({
