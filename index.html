@@ -3,21 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>9Way Community Area Editor</title>
+<title>9Way Community Areas</title>
 <link rel="icon" type="image/png" href="icon.png">
 <style>
   :root {
     --gold: #E6BD00;
     --gold-light: #fdf6d8;
     --gold-dark: #b8960a;
-    --bg: #1a1a1a;
-    --surface: #252525;
-    --surface2: #2f2f2f;
-    --text: #e8e8e8;
-    --text-dim: #888;
+    --bg: #F5F5F5;
+    --surface: #fff;
+    --surface2: #f0f0f0;
+    --border: #ddd;
+    --border-light: #ebebeb;
+    --text: #1a1a1a;
+    --text-secondary: #333;
+    --text-dim: #666;
+    --text-hint: #999;
     --danger: #D8000C;
-    --danger-bg: rgba(216,0,12,0.15);
+    --danger-bg: rgba(216,0,12,0.08);
+    --success: #6a994e;
     --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.1);
     --max-image: 1200;
     --max-kb: 300;
   }
@@ -28,62 +36,132 @@
     color: var(--text);
     min-height: 100vh;
   }
-  h1 { font-size: 22px; font-weight: 800; }
-  h2 { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+  h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+  h2 { font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
   h3 { font-size: 14px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+
+  /* Header */
+  .top-bar {
+    background: var(--gold);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .top-bar img { width: 40px; height: 40px; border-radius: 10px; }
+  .top-bar-title { font-size: 18px; font-weight: 700; color: #fff; flex: 1; }
+  .top-bar .btn { color: #fff; border-color: rgba(255,255,255,0.5); }
+  .top-bar .btn:hover { background: rgba(255,255,255,0.15); }
+  .back-btn {
+    background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;
+    padding: 0 8px 0 0; line-height: 1; font-weight: 300;
+  }
 
   /* Layout */
   .app { max-width: 1100px; margin: 0 auto; padding: 20px; }
-  .header { display: flex; align-items: center; gap: 12px; padding: 16px 0 24px; border-bottom: 1px solid var(--surface2); margin-bottom: 24px; }
-  .header-logo { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
   .panels { display: grid; grid-template-columns: 340px 1fr; gap: 24px; }
   @media (max-width: 800px) { .panels { grid-template-columns: 1fr; } }
 
   /* Form elements */
-  label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; margin-top: 14px; }
+  label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; margin-top: 16px; }
+  label:first-child { margin-top: 0; }
   input[type="text"], input[type="number"], select, textarea {
-    width: 100%; padding: 10px 12px; background: var(--surface2); border: 1px solid #444; border-radius: var(--radius);
-    color: var(--text); font-size: 14px; outline: none;
+    width: 100%; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--text-secondary); font-size: 16px; outline: none; transition: border-color 0.15s;
   }
+  input::placeholder, textarea::placeholder { color: #bbb; }
   input:focus, select:focus, textarea:focus { border-color: var(--gold); }
   textarea { resize: vertical; min-height: 60px; }
   select { cursor: pointer; }
 
   /* Buttons */
   .btn {
-    padding: 9px 18px; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: opacity 0.15s;
+    padding: 10px 18px; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
   }
   .btn:hover { opacity: 0.85; }
   .btn:disabled { opacity: 0.35; cursor: default; }
   .btn-gold { background: var(--gold); color: #fff; }
-  .btn-outline { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
-  .btn-danger { background: var(--danger-bg); color: #ff6b6b; }
-  .btn-dim { background: var(--surface2); color: var(--text-dim); }
-  .btn-sm { padding: 6px 12px; font-size: 13px; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--gold); color: var(--gold-dark); }
+  .btn-outline:hover { background: var(--gold-light); }
+  .btn-danger { background: var(--danger-bg); color: var(--danger); }
+  .btn-dim { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+  .btn-sm { padding: 7px 14px; font-size: 13px; }
   .btn-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
 
   /* Chips */
   .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
-    padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; cursor: pointer;
-    background: var(--surface2); color: var(--text-dim); border: 1.5px solid transparent; transition: all 0.15s; user-select: none;
+    padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+    background: var(--surface2); color: var(--text-dim); border: 1.5px solid var(--border); transition: all 0.15s; user-select: none;
   }
   .chip.active { background: var(--gold-light); color: var(--gold-dark); border-color: var(--gold); }
   .chip:hover { border-color: var(--gold); }
 
   /* Cards */
-  .card { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .card {
+    background: var(--surface); border-radius: var(--radius-lg); padding: 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow);
+  }
+
+  /* =========== HOME VIEW =========== */
+  .home-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .home-header h2 { margin: 0; font-size: 20px; }
+  .area-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .area-card {
+    background: var(--surface); border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow); cursor: pointer; transition: box-shadow 0.2s, transform 0.15s;
+    border: 2px solid transparent;
+  }
+  .area-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--gold); }
+  .area-card-img {
+    width: 100%; height: 180px; object-fit: cover; background: var(--surface2); display: block;
+  }
+  .area-card-img-placeholder {
+    width: 100%; height: 180px; background: linear-gradient(135deg, var(--gold-light), var(--surface2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; color: var(--gold);
+  }
+  .area-card-body { padding: 16px; }
+  .area-card-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .area-card-meta { font-size: 13px; color: var(--text-dim); display: flex; gap: 12px; flex-wrap: wrap; }
+  .area-card-meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .area-card-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    background: var(--gold); color: #fff; margin-top: 8px;
+  }
+
+  /* Search */
+  .search-bar {
+    width: 100%; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); font-size: 16px; color: var(--text-secondary); outline: none;
+    margin-bottom: 20px; transition: border-color 0.15s;
+  }
+  .search-bar:focus { border-color: var(--gold); }
+  .search-bar::placeholder { color: #bbb; }
+
+  /* =========== EDITOR VIEW =========== */
   .boulder-card { display: flex; gap: 12px; align-items: center; cursor: pointer; transition: border-color 0.15s; border: 2px solid transparent; }
   .boulder-card:hover { border-color: var(--gold); }
-  .boulder-card.active { border-color: var(--gold); }
+  .boulder-card.active { border-color: var(--gold); background: var(--gold-light); }
   .boulder-thumb { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: var(--surface2); flex-shrink: 0; }
-  .boulder-thumb-empty { display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 11px; }
+  .boulder-thumb-empty { display: flex; align-items: center; justify-content: center; color: var(--text-hint); font-size: 11px; }
   .boulder-card-info { flex: 1; min-width: 0; }
-  .boulder-card-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .boulder-card-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
   .boulder-card-meta { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
   .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; background: var(--gold); color: #fff; margin-right: 6px; }
-  .badge-line { background: #2d6a2e; }
+  .badge-line { background: var(--success); }
 
   /* Image drawing area */
   .draw-area { position: relative; background: #000; border-radius: var(--radius); overflow: hidden; cursor: crosshair; user-select: none; touch-action: none; }
@@ -91,8 +169,8 @@
   .draw-area canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
   .draw-placeholder {
     display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;
-    min-height: 300px; border: 2px dashed #444; border-radius: var(--radius); color: var(--text-dim);
-    cursor: pointer; transition: border-color 0.15s;
+    min-height: 300px; border: 2px dashed var(--border); border-radius: var(--radius); color: var(--text-dim);
+    cursor: pointer; transition: border-color 0.15s; background: var(--surface2);
   }
   .draw-placeholder:hover { border-color: var(--gold); }
   .draw-placeholder input { display: none; }
@@ -100,46 +178,84 @@
 
   /* Boulder list */
   .boulder-list { max-height: calc(100vh - 200px); overflow-y: auto; }
-  .section-divider { border-top: 1px solid var(--surface2); margin: 20px 0; }
+  .section-divider { border-top: 1px solid var(--border-light); margin: 20px 0; }
 
   /* Export area */
-  .export-box { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
-  .export-box pre { background: var(--surface2); padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 12px; color: #aaa; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
+  .export-box { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-top: 16px; box-shadow: var(--shadow); }
+  .export-box pre { background: var(--surface2); padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 12px; color: var(--text-dim); max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
   .export-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 
   /* Compression info */
   .compress-info { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--text-dim); }
   .compress-info .size { font-weight: 700; }
-  .compress-info .ok { color: #6a994e; }
+  .compress-info .ok { color: var(--success); }
   .compress-info .warn { color: #e65100; }
 
   /* Toast */
   .toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--gold);
-    color: #000; padding: 10px 24px; border-radius: 20px; font-size: 14px; font-weight: 600;
+    color: #fff; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 600;
     z-index: 100; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   }
   .toast.show { opacity: 1; }
 
   .star-picker { display: inline-flex; gap: 2px; cursor: pointer; }
-  .star-picker span { font-size: 22px; color: #444; transition: color 0.1s; }
+  .star-picker span { font-size: 22px; color: #ddd; transition: color 0.1s; }
   .star-picker span.on { color: var(--gold); }
 
-  .empty-msg { text-align: center; color: var(--text-dim); padding: 40px 0; }
+  .empty-msg { text-align: center; color: var(--text-hint); padding: 40px 0; }
+
+  /* FAB */
+  .fab {
+    position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px;
+    border-radius: 28px; background: var(--gold); color: #fff; border: none;
+    font-size: 28px; font-weight: 300; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25); transition: transform 0.15s;
+    display: flex; align-items: center; justify-content: center; z-index: 40;
+  }
+  .fab:hover { transform: scale(1.08); }
+
+  /* Stats */
+  .stat-value { font-size: 24px; font-weight: 800; color: var(--gold); }
+  .stat-label { font-size: 12px; font-weight: 600; color: var(--text-hint); }
+  .stats-row { display: flex; gap: 24px; margin-bottom: 16px; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 60px 0; color: var(--text-dim); }
+  .spinner {
+    display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border);
+    border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Hidden */
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <img class="header-logo" src="icon.png" alt="9Way">
-    <div>
-      <h1>Community Area Editor</h1>
-      <div style="font-size:13px;color:var(--text-dim);margin-top:2px;">Upload images, draw route lines, export data.json + compressed images</div>
-    </div>
-  </div>
 
+<!-- ============ TOP BAR ============ -->
+<div class="top-bar">
+  <button class="back-btn hidden" id="backBtn" onclick="showHome()">&larr;</button>
+  <img src="icon.png" alt="9Way">
+  <div class="top-bar-title" id="topBarTitle">Community Areas</div>
+</div>
+
+<!-- ============ HOME VIEW ============ -->
+<div id="homeView" class="app">
+  <div class="stats-row" id="homeStats"></div>
+  <input type="text" class="search-bar" id="searchBar" placeholder="Search areas..." oninput="filterAreas()">
+  <div class="area-grid" id="areaGrid">
+    <div class="loading"><div class="spinner"></div><div style="margin-top:12px">Loading areas...</div></div>
+  </div>
+  <button class="fab" onclick="createNewArea()" title="Add new area">+</button>
+</div>
+
+<!-- ============ EDITOR VIEW ============ -->
+<div id="editorView" class="app hidden">
   <div class="panels">
-    <!-- LEFT: Boulder list + area info -->
+    <!-- LEFT: Area info + Boulder list -->
     <div>
       <div class="card">
         <h2>Area Info</h2>
@@ -188,7 +304,7 @@
     <!-- RIGHT: Boulder editor + drawing -->
     <div id="editorPanel">
       <div id="noSelection" class="card" style="text-align:center;padding:60px 20px;">
-        <div style="font-size:40px;margin-bottom:12px;">&#9650;</div>
+        <div style="font-size:40px;margin-bottom:12px;color:var(--gold);">&#9650;</div>
         <div style="color:var(--text-dim);">Select or add a boulder to start editing</div>
       </div>
       <div id="boulderEditor" style="display:none;">
@@ -265,9 +381,11 @@ const MAX_KB = 300;
 const QUALITY_STEPS = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
 
 // --- State ---
+let allAreas = [];
+let currentSlug = null;
 let boulders = [];
 let selectedIdx = -1;
-let coverImageData = null; // { original: File, compressed: Blob, dataUrl: string }
+let coverImageData = null;
 
 // --- Init ---
 (function init() {
@@ -298,7 +416,6 @@ let coverImageData = null; // { original: File, compressed: Blob, dataUrl: strin
     tc.appendChild(chip);
   });
 
-  // Build stars
   buildStars();
 
   // Drag & drop on draw container
@@ -314,8 +431,198 @@ let coverImageData = null; // { original: File, compressed: Blob, dataUrl: strin
       handleBoulderImage(input);
     }
   });
+
+  // Load areas
+  loadAreas();
 })();
 
+// --- Home: Load & display areas ---
+// Embedded fallback data for file:// usage (kept in sync with index.json)
+const EMBEDDED_AREAS = [
+  {"slug":"nossa-senhora-da-assuncao","name":"Nossa Senhora da Assunção","country":"Portugal","city":"Santo Tirso","type":"Bouldering","boulderCount":121,"version":2},
+  {"slug":"raposa","name":"Raposa","country":"Portugal","city":"Santo Tirso","type":"Bouldering","boulderCount":6,"version":2},
+  {"slug":"sameiro","name":"Sameiro","country":"Portugal","city":"Braga","type":"Bouldering","boulderCount":71,"version":3}
+];
+
+async function loadAreas() {
+  try {
+    const resp = await fetch('index.json');
+    if (!resp.ok) throw new Error(resp.status);
+    allAreas = await resp.json();
+  } catch (e) {
+    // Fallback for file:// protocol or fetch failure
+    allAreas = EMBEDDED_AREAS;
+  }
+  renderHome();
+}
+
+function renderHome() {
+  // Stats
+  const totalBoulders = allAreas.reduce((sum, a) => sum + (a.boulderCount || 0), 0);
+  const countries = [...new Set(allAreas.map(a => a.country).filter(Boolean))];
+  document.getElementById('homeStats').innerHTML = `
+    <div><div class="stat-value">${allAreas.length}</div><div class="stat-label">Areas</div></div>
+    <div><div class="stat-value">${totalBoulders}</div><div class="stat-label">Boulders</div></div>
+    <div><div class="stat-value">${countries.length}</div><div class="stat-label">Countries</div></div>
+  `;
+
+  filterAreas();
+}
+
+function filterAreas() {
+  const query = document.getElementById('searchBar').value.toLowerCase().trim();
+  const filtered = query
+    ? allAreas.filter(a =>
+        (a.name || '').toLowerCase().includes(query) ||
+        (a.country || '').toLowerCase().includes(query) ||
+        (a.city || '').toLowerCase().includes(query) ||
+        (a.slug || '').toLowerCase().includes(query)
+      )
+    : allAreas;
+
+  const grid = document.getElementById('areaGrid');
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-msg">No areas found.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(a => {
+    const imgPath = `areas/${a.slug}/images/`;
+    return `<div class="area-card" onclick="openArea('${a.slug}')">
+      <div class="area-card-img-placeholder">&#9968;</div>
+      <div class="area-card-body">
+        <div class="area-card-name">${escapeHtml(a.name || a.slug)}</div>
+        <div class="area-card-meta">
+          ${a.country ? `<span>&#127758; ${escapeHtml(a.country)}</span>` : ''}
+          ${a.city ? `<span>&#127963; ${escapeHtml(a.city)}</span>` : ''}
+          ${a.type ? `<span>${escapeHtml(a.type)}</span>` : ''}
+        </div>
+        <div class="area-card-badge">${a.boulderCount || 0} boulders</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// --- Navigation ---
+function showHome() {
+  document.getElementById('homeView').classList.remove('hidden');
+  document.getElementById('editorView').classList.add('hidden');
+  document.getElementById('backBtn').classList.add('hidden');
+  document.getElementById('topBarTitle').textContent = 'Community Areas';
+  currentSlug = null;
+  resetEditor();
+  loadAreas();
+}
+
+function showEditor(title) {
+  document.getElementById('homeView').classList.add('hidden');
+  document.getElementById('editorView').classList.remove('hidden');
+  document.getElementById('backBtn').classList.remove('hidden');
+  document.getElementById('topBarTitle').textContent = title || 'New Area';
+}
+
+function resetEditor() {
+  boulders = [];
+  selectedIdx = -1;
+  coverImageData = null;
+  document.getElementById('areaName').value = '';
+  document.getElementById('areaCountry').value = '';
+  document.getElementById('areaCity').value = '';
+  document.getElementById('areaType').value = 'Bouldering';
+  document.getElementById('areaDesc').value = '';
+  document.getElementById('areaLat').value = '';
+  document.getElementById('areaLng').value = '';
+  document.getElementById('coverInfo').textContent = 'No image';
+  document.getElementById('exportPreview').innerHTML = '';
+  renderBoulderList();
+  document.getElementById('boulderEditor').style.display = 'none';
+  document.getElementById('noSelection').style.display = '';
+}
+
+// --- Open existing area ---
+async function openArea(slug) {
+  currentSlug = slug;
+  resetEditor();
+
+  try {
+    const resp = await fetch(`areas/${slug}/data.json`);
+    const data = await resp.json();
+
+    document.getElementById('areaName').value = data.name || '';
+    document.getElementById('areaType').value = data.type || 'Bouldering';
+    document.getElementById('areaCountry').value = data.country || '';
+    document.getElementById('areaCity').value = data.city || '';
+    document.getElementById('areaDesc').value = data.description || '';
+    document.getElementById('areaLat').value = data.coordinates?.latitude ?? '';
+    document.getElementById('areaLng').value = data.coordinates?.longitude ?? '';
+
+    if (data.boulders && Array.isArray(data.boulders)) {
+      boulders = data.boulders.map(b => ({
+        name: b.name || '',
+        grade: b.grade || '6a',
+        stars: b.stars || 1,
+        tags: b.tags || [],
+        rockType: b.rockType || 'Granite',
+        sector: b.sector || '',
+        notes: b.notes || '',
+        coordinates: b.coordinates || null,
+        imageData: null,
+        routeLine: b.routeLine || null,
+        imageFilename: b.imageFilename || null,
+      }));
+
+      // Try to load boulder images from the area folder
+      for (const b of boulders) {
+        if (b.imageFilename) {
+          try {
+            const imgResp = await fetch(`areas/${slug}/images/${b.imageFilename}`);
+            if (imgResp.ok) {
+              const blob = await imgResp.blob();
+              const dataUrl = URL.createObjectURL(blob);
+              const img = new Image();
+              await new Promise((resolve) => {
+                img.onload = resolve;
+                img.src = dataUrl;
+              });
+              b.imageData = {
+                blob, dataUrl,
+                width: img.naturalWidth, height: img.naturalHeight,
+                originalSize: blob.size, compressedSize: blob.size
+              };
+            }
+          } catch (e) { /* image not available, that's ok */ }
+        }
+      }
+
+      selectedIdx = boulders.length > 0 ? 0 : -1;
+      renderBoulderList();
+      if (selectedIdx >= 0) loadBoulderEditor();
+    }
+
+    showEditor(data.name || slug);
+    toast('Area loaded');
+  } catch (e) {
+    // Fallback: pre-fill from index metadata when data.json can't be fetched
+    const meta = allAreas.find(a => a.slug === slug);
+    if (meta) {
+      document.getElementById('areaName').value = meta.name || '';
+      document.getElementById('areaCountry').value = meta.country || '';
+      document.getElementById('areaCity').value = meta.city || '';
+      document.getElementById('areaType').value = meta.type || 'Bouldering';
+    }
+    showEditor(meta?.name || slug);
+    toast('Area metadata loaded (use Import JSON to load full data)');
+  }
+}
+
+// --- Create new area ---
+function createNewArea() {
+  currentSlug = null;
+  resetEditor();
+  showEditor('New Area');
+}
+
+// --- Stars ---
 function buildStars() {
   const sp = document.getElementById('bStars');
   sp.innerHTML = '';
@@ -346,21 +653,18 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// --- Image compression (matches app: always resize to 1200px width, step down quality) ---
+// --- Image compression ---
 async function compressImage(file) {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = async () => {
-      // Always resize to MAX_PX width (matching the app's { resize: { width: 1200 } })
       const w = MAX_PX;
       const h = Math.round(img.naturalHeight * MAX_PX / img.naturalWidth);
-
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, w, h);
 
-      // Step down quality until under MAX_KB, keep last attempt if all exceed
       let blob;
       for (const q of QUALITY_STEPS) {
         blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
@@ -395,8 +699,8 @@ function addBoulder() {
   boulders.push({
     name: '', grade: '6a', stars: 1, tags: [], rockType: 'Granite',
     sector: '', notes: '', coordinates: null,
-    imageData: null, // { blob, dataUrl, width, height, ... }
-    routeLine: null, // [{x,y}, ...]
+    imageData: null,
+    routeLine: null,
     imageFilename: null,
   });
   selectedIdx = boulders.length - 1;
@@ -429,7 +733,7 @@ function renderBoulderList() {
     const thumb = b.imageData
       ? `<img class="boulder-thumb" src="${b.imageData.dataUrl}">`
       : `<div class="boulder-thumb boulder-thumb-empty">No img</div>`;
-    const name = b.name || '<em style="color:var(--text-dim)">Unnamed</em>';
+    const name = b.name || '<em style="color:var(--text-hint)">Unnamed</em>';
     const lineBadge = b.routeLine && b.routeLine.length >= 2 ? '<span class="badge badge-line">LINE</span>' : '';
     return `<div class="card boulder-card ${i === selectedIdx ? 'active' : ''}" onclick="selectBoulder(${i})">
       ${thumb}
@@ -524,7 +828,7 @@ function renderDrawArea() {
 
   const sizeClass = b.imageData.compressedSize <= MAX_KB * 1024 ? 'ok' : 'warn';
   info.style.display = '';
-  info.innerHTML = `Compressed: <span class="size ${sizeClass}">${formatSize(b.imageData.compressedSize)}</span> <span style="color:#555">(from ${formatSize(b.imageData.originalSize)})</span>`;
+  info.innerHTML = `Compressed: <span class="size ${sizeClass}">${formatSize(b.imageData.compressedSize)}</span> <span style="color:var(--text-hint)">(from ${formatSize(b.imageData.originalSize)})</span>`;
 
   container.innerHTML = `<div class="draw-area" id="drawArea">
     <img src="${b.imageData.dataUrl}" id="drawImg">
@@ -715,10 +1019,7 @@ function downloadJSON() {
 
 async function exportAll() {
   const data = buildDataJSON();
-
-  // Use JSZip if available, otherwise download files individually
   if (typeof JSZip === 'undefined') {
-    // Load JSZip dynamically
     await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
   }
 
@@ -727,15 +1028,12 @@ async function exportAll() {
   const folder = zip.folder(slug);
   const imgFolder = folder.folder('images');
 
-  // data.json
   folder.file('data.json', JSON.stringify(data, null, 2));
 
-  // Cover image
   if (coverImageData) {
     imgFolder.file('cover.jpg', coverImageData.blob);
   }
 
-  // Boulder images
   boulders.forEach((b) => {
     if (b.imageData && b.imageFilename) {
       imgFolder.file(b.imageFilename, b.imageData.blob);

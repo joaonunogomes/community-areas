@@ -54,15 +54,27 @@ Each boulder object:
 
 ## Area Editor
 
-The repository includes a browser-based editor for creating and editing area `data.json` files, available at **https://ninewayclimbing.github.io/community-areas/**. Use it to:
+The repository includes a browser-based area browser and editor, available at **https://ninewayclimbing.github.io/community-areas/**.
 
-- Fill in area metadata (name, type, coordinates, country, city, description).
-- Add boulder problems with name, grade, notes, and optional sector.
-- Upload and compress images (automatically resized to meet the 300KB limit).
+### Browsing areas
+
+The home page lists all community areas from `index.json` as cards showing the area name, location, type, and boulder count. Use the search bar to filter areas by name, country, or city. Summary statistics (total areas, boulders, and countries) are displayed at the top.
+
+### Editing an existing area
+
+Click any area card to open it in the editor. The full `data.json` and boulder images are loaded automatically. From there you can:
+
+- Edit area metadata (name, type, coordinates, country, city, description).
+- Edit, add, or remove boulder problems.
+- Upload and compress images (automatically resized to 1200px width, stepped quality reduction to stay under 300KB).
 - Draw route lines on boulder images.
-- Export the resulting `data.json` ready for submission.
+- Preview and export the resulting `data.json` or download a ZIP with all data and images.
 
-The editor uses an `escapeHtml()` utility to safely render JSON previews, preventing any HTML injection when displaying user-provided content.
+Use the back arrow in the top bar to return to the area list.
+
+### Creating a new area
+
+Click the **+** button on the home page to open a blank editor. Fill in the area details, add boulders, and export when ready.
 
 ## Contributing
 
