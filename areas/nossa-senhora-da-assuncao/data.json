@@ -833,6 +833,14 @@
       ]
     },
     {
+      "name": "Resvalanço",
+      "grade": "7c",
+      "stars": 3,
+      "rockType": "Granite",
+      "sector": "Sector Boulder",
+      "notes": "Sem talhados (Without carved holds)."
+    },
+    {
       "name": "Idade de Pedra",
       "grade": "7a",
       "stars": 0,
