@@ -31,5 +31,16 @@
       "boulderCount": 71,
       "imageFilename": "sameiro.jpg",
       "version": 3
+    },
+    {
+      "slug": "santo-tirso",
+      "name": "Santo Tirso",
+      "country": "Portugal",
+      "city": "Santo Tirso",
+      "type": "Bouldering",
+      "status": "DRAFT",
+      "boulderCount": 135,
+      "imageFilename": "boulder_1.jpeg",
+      "version": 2
     }
   ]
