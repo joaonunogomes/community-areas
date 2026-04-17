@@ -15,6 +15,10 @@
       "name": "Passeio Micológico (sit start)",
       "grade": "7b",
       "stars": 3,
+      "tags": [
+        "Crimpy",
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "imageFilename": "passeio_micol_gico__sit_start_.jpg",
       "sector": "Sector Boulder",
@@ -50,6 +54,9 @@
       "name": "Passeio micológico (high start)",
       "grade": "7a",
       "stars": 0,
+      "tags": [
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "imageFilename": "passeio_micol_gico__sit_start_.jpg",
       "sector": "Sector Boulder",
@@ -112,6 +119,10 @@
       "name": "Passeio aplatológico",
       "grade": "7a",
       "stars": 0,
+      "tags": [
+        "Sloper",
+        "Athletic"
+      ],
       "rockType": "Granite",
       "imageFilename": "passeio_micol_gico__sit_start_.jpg",
       "sector": "Sector Boulder",
@@ -209,6 +220,10 @@
       "name": "Bicep's Mu!",
       "grade": "7c",
       "stars": 0,
+      "tags": [
+        "Sloper",
+        "Athletic"
+      ],
       "rockType": "Granite",
       "imageFilename": "passeio_micol_gico__sit_start_.jpg",
       "sector": "Sector Boulder",
@@ -477,6 +492,10 @@
       "name": "Karma (sit start)",
       "grade": "7a",
       "stars": 0,
+      "tags": [
+        "Crimpy",
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "imageFilename": "karma.jpg",
       "sector": "Sector Boulder",
@@ -693,6 +712,9 @@
       "name": "Limonete",
       "grade": "6b",
       "stars": 0,
+      "tags": [
+        "Crimpy"
+      ],
       "rockType": "Granite",
       "imageFilename": "limonete.jpg",
       "sector": "Sector Boulder",
@@ -836,6 +858,11 @@
       "name": "Resvalanço",
       "grade": "7c",
       "stars": 3,
+      "tags": [
+        "Technical",
+        "Athletic",
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "sector": "Sector Boulder",
       "notes": "Sem talhados (Without carved holds)."
@@ -1074,6 +1101,10 @@
       "name": "Lançamento Descola",
       "grade": "7c+",
       "stars": 0,
+      "tags": [
+        "Crimpy",
+        "Athletic"
+      ],
       "rockType": "Granite",
       "imageFilename": "lan_amento_descola.jpg",
       "sector": "Sector Boulder",
@@ -1113,6 +1144,12 @@
       "name": "Descola Estático",
       "grade": "7c",
       "stars": 3,
+      "tags": [
+        "Crimpy",
+        "Athletic",
+        "Technical",
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "imageFilename": "lan_amento_descola.jpg",
       "sector": "Sector Boulder",
@@ -1152,6 +1189,12 @@
       "name": "Descola (cs esquerda)",
       "grade": "8a+",
       "stars": 3,
+      "tags": [
+        "Crimpy",
+        "Athletic",
+        "Technical",
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "imageFilename": "lan_amento_descola.jpg",
       "sector": "Sector Boulder",
@@ -1230,6 +1273,9 @@
       "name": "Descola Swing",
       "grade": "7a",
       "stars": 0,
+      "tags": [
+        "Technical"
+      ],
       "rockType": "Granite",
       "imageFilename": "lan_amento_descola.jpg",
       "sector": "Sector Boulder",
@@ -1418,6 +1464,9 @@
       "name": "Quebra Noz",
       "grade": "7b",
       "stars": 0,
+      "tags": [
+        "Technical"
+      ],
       "rockType": "Granite",
       "imageFilename": "sardanisca.jpg",
       "sector": "Sector Boulder",
@@ -1704,6 +1753,11 @@
       "name": "Lusco fusco",
       "grade": "7a+",
       "stars": 0,
+      "tags": [
+        "Athletic",
+        "Technical",
+        "Cruxy"
+      ],
       "rockType": "Granite",
       "imageFilename": "twister.jpg",
       "sector": "Sector Boulder",
@@ -1836,6 +1890,11 @@
       "name": "Moto-Serra",
       "grade": "6b",
       "stars": 0,
+      "tags": [
+        "Sloper",
+        "Athletic",
+        "Endurance"
+      ],
       "rockType": "Granite",
       "imageFilename": "moto_serra.jpg",
       "sector": "Sector Boulder",
