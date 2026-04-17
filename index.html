@@ -152,9 +152,11 @@
   .search-bar::placeholder { color: #bbb; }
 
   /* =========== EDITOR VIEW =========== */
-  .boulder-card { display: flex; gap: 12px; align-items: center; cursor: pointer; transition: border-color 0.15s; border: 2px solid transparent; }
+  .boulder-card { display: flex; gap: 12px; align-items: center; cursor: grab; transition: border-color 0.15s, opacity 0.2s; border: 2px solid transparent; }
   .boulder-card:hover { border-color: var(--gold); }
   .boulder-card.active { border-color: var(--gold); background: var(--gold-light); }
+  .boulder-card.dragging { opacity: 0.4; }
+  .boulder-card.drag-over { border-top: 3px solid var(--gold); }
   .boulder-thumb { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: var(--surface2); flex-shrink: 0; }
   .boulder-thumb-empty { display: flex; align-items: center; justify-content: center; color: var(--text-hint); font-size: 11px; }
   .boulder-card-info { flex: 1; min-width: 0; }
@@ -818,6 +820,53 @@ function deleteBoulder() {
   else { document.getElementById('boulderEditor').style.display = 'none'; document.getElementById('noSelection').style.display = ''; }
 }
 
+let dragSrcIdx = null;
+
+function handleDragStart(e, idx) {
+  dragSrcIdx = idx;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  const card = e.currentTarget;
+  card.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e, targetIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+
+  const [moved] = boulders.splice(dragSrcIdx, 1);
+  boulders.splice(targetIdx, 0, moved);
+
+  // Update selectedIdx to follow the selected boulder
+  if (selectedIdx === dragSrcIdx) {
+    selectedIdx = targetIdx;
+  } else if (dragSrcIdx < selectedIdx && targetIdx >= selectedIdx) {
+    selectedIdx--;
+  } else if (dragSrcIdx > selectedIdx && targetIdx <= selectedIdx) {
+    selectedIdx++;
+  }
+
+  dragSrcIdx = null;
+  renderBoulderList();
+}
+
+function handleDragEnd(e) {
+  dragSrcIdx = null;
+  document.querySelectorAll('.boulder-card').forEach(c => {
+    c.classList.remove('dragging', 'drag-over');
+  });
+}
+
 function renderBoulderList() {
   const list = document.getElementById('boulderList');
   if (boulders.length === 0) {
@@ -832,7 +881,7 @@ function renderBoulderList() {
     const lineBadge = b.routeLine && b.routeLine.length >= 2 ? '<span class="badge badge-line">LINE</span>' : '';
     const sharedCount = getSiblings(i).length;
     const sharedBadge = sharedCount > 0 ? `<span style="font-size:11px;color:var(--text-hint);" title="Shares image with ${sharedCount} other boulder(s)">&#128247;${sharedCount + 1}</span>` : '';
-    return `<div class="card boulder-card ${i === selectedIdx ? 'active' : ''}" onclick="selectBoulder(${i})">
+    return `<div class="card boulder-card ${i === selectedIdx ? 'active' : ''}" draggable="true" onclick="selectBoulder(${i})" ondragstart="handleDragStart(event,${i})" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,${i})" ondragend="handleDragEnd(event)">
       ${thumb}
       <div class="boulder-card-info">
         <div class="boulder-card-name">${name}</div>
@@ -1494,14 +1543,14 @@ async function submitPR() {
     // Step 2: Prepare files
     updateProgress(2);
 
-    // Get latest commit SHA from upstream
-    const refResp = await ghApi(`/repos/${REPO_OWNER}/${REPO_NAME}/git/ref/heads/main`);
+    // Get latest commit SHA from fork (after merge-upstream sync)
+    const refResp = await ghApi(`/repos/${fork}/${REPO_NAME}/git/ref/heads/main`);
     if (!refResp.ok) throw new Error('Failed to get main branch ref');
     const refData = await refResp.json();
     const baseSha = refData.object.sha;
 
     // Get the base tree
-    const commitResp = await ghApi(`/repos/${REPO_OWNER}/${REPO_NAME}/git/commits/${baseSha}`);
+    const commitResp = await ghApi(`/repos/${fork}/${REPO_NAME}/git/commits/${baseSha}`);
     if (!commitResp.ok) throw new Error('Failed to get base commit');
     const commitData = await commitResp.json();
     const baseTreeSha = commitData.tree.sha;
